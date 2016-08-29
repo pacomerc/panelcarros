@@ -12,6 +12,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('PanelBundle:Default:index.html.twig');
+        return $this->render('PanelBundle:panel:index.html.twig');
     }
 }
