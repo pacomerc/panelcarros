@@ -1,0 +1,27 @@
+{% extends 'PanelBundle:panel:base.html.twig' %}
+
+{% block metas %}
+<meta name="description" content="panel excel">
+<meta name="keywords" content="Panel">
+{% endblock %}
+
+{% block stylesheets %}
+	
+	<link href="{{ asset('bundles/panel/css/styles.css') }}" rel="stylesheet" />
+{% endblock %}
+
+
+{% block body %}
+<!-- form1 -->
+{{ form_start(form, {'attr': {'id': 'form-seleccionar'}})  }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+<!-- END form1 -->
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{ asset('bundles/panel/js/jquery-2.1.4.min.js') }}" ></script>
+<script type="text/javascript" src="{{ asset('bundles/panel/js/funciones.js') }}" ></script>
+
+{% endblock %}
+
