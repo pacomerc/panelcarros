@@ -5,3 +5,9 @@
 <meta name="description" content="panel excel">
 <meta name="keywords" content="Panel">
 {% endblock %}
+
+{% block body %}
+    {% if pagina is defined %}
+        {{ pagina }}
+    {% endif %}
+{% endblock %}
