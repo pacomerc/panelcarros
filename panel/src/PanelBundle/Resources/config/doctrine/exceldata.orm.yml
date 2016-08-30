@@ -1,0 +1,18 @@
+PanelBundle\Entity\exceldata:
+    type: entity
+    table: null
+    repositoryClass: PanelBundle\Repository\exceldataRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        nombre:
+            type: string
+            length: 255
+        ruta:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }

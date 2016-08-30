@@ -1,0 +1,100 @@
+PanelBundle\Entity\excelDataBase:
+    type: entity
+    table: null
+    repositoryClass: PanelBundle\Repository\excelDataBaseRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        stockNumber:
+            type: string
+            length: 255
+            column: Stock_Number
+        vin:
+            type: string
+            length: 255
+            column: Vin
+        year:
+            type: string
+            length: 255
+            column: Year
+        make:
+            type: string
+            length: 255
+            column: Make
+        model:
+            type: string
+            length: 255
+            column: Model
+        bodyStyle:
+            type: string
+            length: 255
+            column: BodyStyle
+        mileage:
+            type: string
+            length: 255
+            column: Mileage
+        price:
+            type: string
+            length: 255
+            column: Price
+        mSRP:
+            type: string
+            length: 255
+            column: MSRP
+        type:
+            type: string
+            length: 255
+            column: Type
+        exteriorColor:
+            type: string
+            length: 255
+            column: ExteriorColor
+        interiorColor:
+            type: string
+            length: 255
+            column: InteriorColor
+        trim:
+            type: string
+            length: 255
+            column: Trim
+        modelCode:
+            type: string
+            length: 255
+            column: ModelCode
+        transmission:
+            type: string
+            length: 255
+            column: Transmission
+        cost:
+            type: string
+            length: 255
+            column: Cost
+        dateArrived:
+            type: string
+            length: 255
+            column: DateArrived
+        featuredEquipment:
+            type: string
+            length: 255
+            column: FeaturedEquipment
+        optionGroup:
+            type: string
+            length: 255
+            column: OptionGroup
+        fedColor:
+            type: string
+            length: 255
+            column: FedColor
+        location:
+            type: string
+            length: 255
+            column: Location
+        certified:
+            type: string
+            length: 255
+            column: Certified
+    lifecycleCallbacks: {  }
