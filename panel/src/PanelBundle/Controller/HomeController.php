@@ -29,7 +29,7 @@ class HomeController extends Controller
             ->add('seleccionar_Archivo',ChoiceType::class,
                array(
                 'choices' => array(
-                    'Tipo de archivo1' => null,
+                    'Tipo de archivo' => null,
                     'Excel xsl' => "xsl",
                     'Excel xlsx' => "xslx",
                     'Archivo csv' =>"csv"
