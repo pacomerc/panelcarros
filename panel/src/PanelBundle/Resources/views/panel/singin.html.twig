@@ -1,13 +1,40 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link href="{{ asset('bundles/panel/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/panel/css/singin.css') }}" rel="stylesheet" />
+{% endblock %}
+
 {% block body %}
     {% for flashMessage in app.session.flashBag.get('error') %}
-        <div class="fixed">
-            <span class="alerta">
-                {{ flashMessage }}
-            </span>
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{ flashMessage }}
         </div>
     {% endfor %}
-    {{ form_start(form) }}
-    {{ form_end(form) }}
+    {% for flashMessage in app.session.flashBag.get('success') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Correcto!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <div class="esp-60"></div>
+    <div class="col-sm-offset-3 col-sm-6">
+            {{ form_start(form) }}
+        <p>
+            {{ form_widget(form.email, { 'attr': { 'class': 'form-control', 'placeholder': 'Ingrese su Email.' } }) }}
+        </p>
+        <p>
+            {{ form_widget(form.pass, { 'attr': { 'class': 'form-control', 'placeholder': 'Ingrese su Contraseña.' } }) }}
+        </p>
+        <p>
+            {{ form_widget(form.submit, { 'attr': { 'class': 'btn btn-success', 'value': 'Ingresar' } }) }}
+        </p>
+            {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('bundles/panel/js/jquery-1.11.3.min.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('bundles/panel/js/bootstrap.min.js') }}" ></script>
 {% endblock %}

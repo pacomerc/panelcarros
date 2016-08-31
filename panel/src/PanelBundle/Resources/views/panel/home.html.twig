@@ -12,6 +12,7 @@
 
 
 {% block body %}
+	{{ app.session.get('rol') }}
 <div class="conte90 margin-top-first-content">
 <center><img class="banerhome" src="{{ asset('bundles/panel/images/banerHomeExcel.png') }}" /></center>
 {% if numerofilas!= "" %}
@@ -28,7 +29,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" src="{{ asset('bundles/panel/js/jquery-2.1.4.min.js') }}" ></script>
+<script type="text/javascript" src="{{ asset('bundles/panel/js/jquery-1.11.3.min.js') }}" ></script>
 <script type="text/javascript" src="{{ asset('bundles/panel/js/funciones.js') }}" ></script>
 {% endblock %}
 

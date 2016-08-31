@@ -1,0 +1,10 @@
+.alert {
+    position: absolute !important;
+    top: 50px;
+    right: 0;
+    z-index: 1;
+}
+
+.esp-60 {
+    height: 60px;
+}

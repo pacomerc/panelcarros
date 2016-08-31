@@ -28,52 +28,54 @@ class HomeController extends Controller
      */
     public function indexAction(Request $request)
     {
-      $contfilas="";
-    	$form = $this->createFormBuilder()
-            /*->add('seleccionar_Archivo',ChoiceType::class,
-               array(
-                'choices' => array(
-                    'Tipo de archivo' => null,
-                    'Excel xsl' => "xsl",
-                    'Excel xlsx' => "xslx",
-                    'Archivo csv' =>"csv"
-                ),'choice_attr' => function($val, $key, $index) {
-                    // adds a class ¡
-                      return ['class' => 'select-'.strtolower($key)];
-                },'attr' => array('class' => 'icons'),'label_attr'=> array('class' => 'esconder'),"required"=>true))
-                */
-            ->add('Archivo', FileType::class, array('label' => 'Archivo (Excel) '))
-            ->add('enviar', SubmitType::class, array('label' => 'Cargar','attr' => array('class' => 'cargar-button-home')))
-            ->getForm();
-
+        $session = $request->getSession();
+        if ($session->has('rol'))
+        {
+            $contfilas = "";
+            $form = $this->createFormBuilder()
+                /*->add('seleccionar_Archivo',ChoiceType::class,
+                   array(
+                    'choices' => array(
+                        'Tipo de archivo' => null,
+                        'Excel xsl' => "xsl",
+                        'Excel xlsx' => "xslx",
+                        'Archivo csv' =>"csv"
+                    ),'choice_attr' => function($val, $key, $index) {
+                        // adds a class ¡
+                          return ['class' => 'select-'.strtolower($key)];
+                    },'attr' => array('class' => 'icons'),'label_attr'=> array('class' => 'esconder'),"required"=>true))
+                    */
+                ->add('Archivo', FileType::class, array('label' => 'Archivo (Excel) '))
+                ->add('enviar', SubmitType::class, array('label' => 'Cargar', 'attr' => array('class' => 'cargar-button-home')))
+                ->getForm();
 
 
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-               // $data = $request;
+                // $data = $request;
                 //$file = $data->files->get("Archivo");
-               //$form['Archivo']->getData()->guessExtension()
-                $file=$form['Archivo'];
+                //$form['Archivo']->getData()->guessExtension()
+                $file = $form['Archivo'];
                 //die($file->getData()->getClientOriginalName());
-                $archivo=explode(".", $file->getData()->getClientOriginalName());
-                $sep=$archivo[count($archivo)-1];
-                $fileName = md5(uniqid()).'.'.$sep;
-                    
+                $archivo = explode(".", $file->getData()->getClientOriginalName());
+                $sep = $archivo[count($archivo) - 1];
+                $fileName = md5(uniqid()) . '.' . $sep;
 
-                if($sep!="xls"&&$sep!="xlsx"&&$sep!="csv"){////if
+
+                if ($sep != "xls" && $sep != "xlsx" && $sep != "csv") {////if
                     die("Archivo no valido");
-                }else{
+                } else {
                     //////////////////////archivo valido
-                    $fileName = md5(uniqid()).'.'.$sep;
-                    $uipload=$file->getData()->move($this->getParameter('excel_directory'), $fileName);
-                    if($uipload){
-                        //die($uipload);    
-                        $contfilas=self::leerexcel($uipload);
+                    $fileName = md5(uniqid()) . '.' . $sep;
+                    $uipload = $file->getData()->move($this->getParameter('excel_directory'), $fileName);
+                    if ($uipload) {
+                        //die($uipload);
+                        $contfilas = self::leerexcel($uipload);
                         //die("filas:".$contfilas);
                     }
-                    
+
                 }///end if
-                
+
                 //die($sep);
                 //die("requestname:".$form['Archivo']->getData()->getClientOriginalName());
                 //$form = null;
@@ -81,7 +83,14 @@ class HomeController extends Controller
             }
 
             //echo  "filas2".$contfilas;
-        return $this->render('PanelBundle:panel:home.html.twig',array("form"=>$form->createView(),"numerofilas"=>$contfilas));
+            return $this->render('PanelBundle:panel:home.html.twig', array("form" => $form->createView(), "numerofilas" => $contfilas));
+        } else
+        {
+            $this->get('session')->getFlashBag()->clear();
+            $this->get('session')->getFlashBag()->add('error', 'Favor de iniciar sesión.');
+
+            return $this->redirectToRoute('panel_sing_in');
+        }
     }
 
     public function leerexcel($archivo){

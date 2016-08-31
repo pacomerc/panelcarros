@@ -16,9 +16,9 @@ class SessionController extends Controller
     public function indexAction(Request $request)
     {
         $session = $request->getSession();
-        if($session->has('name'))
+        if($session->has('rol'))
         {
-
+            return $this->redirectToRoute('homepanel');
         } else {
             $user = new Usuario();
             $form = $this->createForm(UsuarioType::class, $user);
@@ -51,9 +51,22 @@ class SessionController extends Controller
                 }
             } else {
                 // Mandar vista del formulario
-                return $this->render('PanelBundle:panel:singin.html.twig', ['form' => $form->createView(), 'pass' => sha1('test')]);
+                return $this->render('PanelBundle:panel:singin.html.twig', ['form' => $form->createView()]);
             }
         }
-        return $this->render('PanelBundle:panel:index.html.twig', ['pagina' => 'Session']);
+    }
+
+    /**
+     * @Route("/logout", name="panel_log_out")
+     */
+    public function logoutAction(Request $request)
+    {
+        $session = $request->getSession();
+        $session->clear();
+
+        $this->get('session')->getFlashBag()->clear();
+        $this->get('session')->getFlashBag()->add('success', 'La sesión se a cerrado correctamente.');
+
+        return $this->redirectToRoute('panel_sing_in');
     }
 }
