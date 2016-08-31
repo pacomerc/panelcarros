@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class HomeController extends Controller
 {
     /**
-     * @Route("/home/")
+     * @Route("/home/", name="homepanel")
      */
     public function indexAction(Request $request)
     {

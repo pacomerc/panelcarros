@@ -18,7 +18,6 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
             new PanelBundle\PanelBundle(),
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
-            //new PHPExcel(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

@@ -7,12 +7,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use PanelBundle\Entity\Usuario;
 use PanelBundle\Form\UsuarioType;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class SessionController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/", name="panel_sing_in")
      */
     public function indexAction(Request $request)
     {
@@ -43,11 +42,15 @@ class SessionController extends Controller
                     $session->start();
                     $session->set('rol', $usuario->getRol());
 
-                    return $this->render('PanelBundle:panel:home.html.twig');
+                    return $this->redirectToRoute('homepanel');
+                } else {
+                    $this->get('session')->getFlashBag()->clear();
+                    $this->get('session')->getFlashBag()->add('error', 'El Usuario y/o contraseña no son válidos');
+
+                    return $this->redirectToRoute('panel_sing_in');
                 }
             } else {
                 // Mandar vista del formulario
-
                 return $this->render('PanelBundle:panel:singin.html.twig', ['form' => $form->createView(), 'pass' => sha1('test')]);
             }
         }
