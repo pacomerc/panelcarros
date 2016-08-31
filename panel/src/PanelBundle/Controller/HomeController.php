@@ -18,18 +18,19 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PanelBundle\Entity\ExcelDataBase;
 //use PHPExcel;
 
 class HomeController extends Controller
 {
     /**
-     * @Route("/home/")
+     * @Route("/home/", name="homepanel" ) 
      */
     public function indexAction(Request $request)
     {
-
+      $contfilas="";
     	$form = $this->createFormBuilder()
-            ->add('seleccionar_Archivo',ChoiceType::class,
+            /*->add('seleccionar_Archivo',ChoiceType::class,
                array(
                 'choices' => array(
                     'Tipo de archivo' => null,
@@ -40,8 +41,9 @@ class HomeController extends Controller
                     // adds a class ¡
                       return ['class' => 'select-'.strtolower($key)];
                 },'attr' => array('class' => 'icons'),'label_attr'=> array('class' => 'esconder'),"required"=>true))
+                */
             ->add('Archivo', FileType::class, array('label' => 'Archivo (Excel) '))
-            ->add('enviar', SubmitType::class, array('label' => 'Cargar','attr' => array('class' => 'cargar')))
+            ->add('enviar', SubmitType::class, array('label' => 'Cargar','attr' => array('class' => 'cargar-button-home')))
             ->getForm();
 
 
@@ -65,9 +67,9 @@ class HomeController extends Controller
                     $fileName = md5(uniqid()).'.'.$sep;
                     $uipload=$file->getData()->move($this->getParameter('excel_directory'), $fileName);
                     if($uipload){
-
                         //die($uipload);    
-                        self::leerexcel($uipload);
+                        $contfilas=self::leerexcel($uipload);
+                        //die("filas:".$contfilas);
                     }
                     
                 }///end if
@@ -78,54 +80,15 @@ class HomeController extends Controller
 
             }
 
-
-        return $this->render('PanelBundle:panel:home.html.twig',array("form"=>$form->createView()));
+            //echo  "filas2".$contfilas;
+        return $this->render('PanelBundle:panel:home.html.twig',array("form"=>$form->createView(),"numerofilas"=>$contfilas));
     }
 
-
-
     public function leerexcel($archivo){
-            /*$phpExcelObject =  $this->get('xls.load_xls2007')->load($archivo);
-            $allSheetName=$objPHPExcel->getSheetNames();
-            $objWorksheet = $objPHPExcel->setActiveSheetIndex(0);
-            $highestRow = $objWorksheet->getHighestRow();
-            $highestColumn = $objWorksheet->getHighestColumn();
-            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
-          
-            $headingsArray = $objWorksheet->rangeToArray('A1:'.$highestColumn.'1',null, true, true, true);
-            $headingsArray = $headingsArray[1];
-
-
-                    //Se recorre toda la hoja excel desde la fila 2 y se almacenan los datos
-               $r = -1;
-               $namedDataArray = array();
-               for ($row = 2; $row <= $highestRow; ++$row) {
-                    $dataRow = $objWorksheet->rangeToArray('A'.$row.':'.$highestColumn.$row,null, true, true, true);
-                    if ((isset($dataRow[$row]['A'])) && ($dataRow[$row]['A'] > '')) {
-                          ++$r;
-                          foreach($headingsArray as $columnKey => $columnHeading) {
-                                  $namedDataArray[$r][$columnHeading] = $dataRow[$row][$columnKey];
-                          } //endforeach
-                    } //endif
-                }
-            var_dump($namedDataArray);*/
-            //$phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
-
-
-
-           /* $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject($archivo);
-            $objPHPExcel->setActiveSheetIndex(0);
-            $numRows = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
-            */
-            /*
-
-            
-
-
-            $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
-            $writer->save($archivo);
-            die($archivo);*/
+      set_time_limit(0); // 0 = no limits
+       
             //die()
+      $excelDB= new ExcelDataBase();
 
       $objPHPExcel = $this->get('phpexcel')->createPHPExcelObject($archivo);
       $total_sheets=$objPHPExcel->getSheetCount();
@@ -143,18 +106,109 @@ class HomeController extends Controller
       //Se recorre toda la hoja excel desde la fila 2 y se almacenan los datos
        $r = -1;
        $namedDataArray = array();
+       $em = $this->getDoctrine()->getManager();
        for ($row = 2; $row <= $highestRow; ++$row) {
             $dataRow = $objWorksheet->rangeToArray('A'.$row.':'.$highestColumn.$row,null, true, true, true);
             if ((isset($dataRow[$row]['A'])) && ($dataRow[$row]['A'] > '')) {
+              //echo $dataRow[$row]['A']."<br/>";
                   ++$r;
+                  $contador=0;///se reinicia el contador
                   foreach($headingsArray as $columnKey => $columnHeading) {
                           $namedDataArray[$r][$columnHeading] = $dataRow[$row][$columnKey];
+                          $dato=(string)$dataRow[$row][$columnKey];
+
+
+                          if($dataRow[$row][$columnKey]==null){
+                            $dato="null";
+                          }
+                          
+                          switch ($contador) {
+                            case 0:///Stock Number
+                              $excelDB->setStockNumber($dato);
+                            break;
+                            case 1:///Vin
+                              $excelDB->setVin($dato);
+                            break;
+                            case 2:///Year
+                              $excelDB->setYear($dato);
+                            break;
+                            case 3:///Make
+                              $excelDB->setMake($dato);
+                            break;
+                            case 4:///Model
+                              $excelDB->setModel($dato);
+                            break;
+                            case 5:///Body Style
+                              $excelDB->setBodyStyle($dato);
+                            break;
+                            case 6:///Mileage
+                              $excelDB->setMileage($dato);
+                            break;
+                            case 7:///Price
+                              $excelDB->setPrice($dato);
+                            break;
+                            case 8:///MSRP
+                              $excelDB->setMSRP($dato);
+                            break;
+                            case 9:///Type
+                              $excelDB->setType($dato);
+                            break;
+                            case 10:///Exterior Color
+                              $excelDB->setExteriorColor($dato);
+                            break;
+                            case 11:///Interior Color
+                              $excelDB->setInteriorColor($dato);
+                            break;
+                            case 12:///Trim
+                              $excelDB->setTrim($dato);
+                            break;
+                            case 13:///Model Code
+                              $excelDB->setModelCode($dato);
+                            break;
+                            case 14:///Transmission
+                              $excelDB->setTransmission($dato);
+                            break;
+                            case 15:///Cost
+                              $excelDB->setCost($dato);
+                            break;
+                            case 16:///Date Arrived
+                              $excelDB->setDateArrived($dato);
+                            break;
+                            case 17:///Featured Equipment
+                              $excelDB->setFeaturedEquipment($dato);
+                            break;
+                            case 18:///Option Group
+                              $excelDB->setOptionGroup($dato);
+                            break;
+                            case 19:///Fed Color Code
+                              $excelDB->setFedColor($dato);
+                            break;
+                            case 20:///Location
+                              $excelDB->setLocation($dato);
+                            break;
+                            case 21:///Certified
+                              $excelDB->setCertified($dato);
+                            break;
+                            
+                            default:
+                                  die("Error en columnas");                            
+                              break;
+                          }
+                          //echo  $contador." headingcolumns:".$columnHeading."<br/>";
+                          $contador++;
+                            
                   } //endforeach
+                 /*$em->persist($excelDB);
+                  $em->flush();
+                  $em->clear();*/
+                  
             } //endif
         }
-       var_dump($namedDataArray);
-    die("<br/><br/>");
+       //var_dump($namedDataArray);
+        //echo $namedDataArray[0][0];
 
+    //die("<br/><br/>");
+    return "Se subieron <strong>".$highestRow."</strong> filas";
 
     }/////end leer archivo
 }

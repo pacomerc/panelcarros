@@ -12,11 +12,19 @@
 
 
 {% block body %}
+<div class="conte90 margin-top-first-content">
+<center><img class="banerhome" src="{{ asset('bundles/panel/images/banerHomeExcel.png') }}" /></center>
+{% if numerofilas!= "" %}
+	{{ numerofilas|raw }}
+{% endif %}
+
 <!-- form1 -->
 {{ form_start(form, {'attr': {'id': 'form-seleccionar'}})  }}
 {{ form_widget(form) }}
 {{ form_end(form) }}
 <!-- END form1 -->
+
+</div>
 {% endblock %}
 
 {% block scripts %}
