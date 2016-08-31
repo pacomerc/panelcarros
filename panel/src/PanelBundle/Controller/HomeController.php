@@ -198,9 +198,9 @@ class HomeController extends Controller
                           $contador++;
                             
                   } //endforeach
-                 /*$em->persist($excelDB);
+                 $em->persist($excelDB);
                   $em->flush();
-                  $em->clear();*/
+                  $em->clear();
                   
             } //endif
         }
