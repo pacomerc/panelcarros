@@ -38,9 +38,6 @@ class JsonHomeController extends Controller
        $encoders = [new XmlEncoder(), new JsonEncode()];
        $normalizers = [new GetSetMethodNormalizer()];
        $serializer = new Serializer($normalizers, $encoders);
-     
-       /* $em = $this->getDoctrine()->getManager();
-        $query=$em->query*/
 
         $repository = $this->getDoctrine()->getRepository('PanelBundle:ExcelDataBase')->findBy(array(),array("id"=>"ASC"));
         if(!$repository){
