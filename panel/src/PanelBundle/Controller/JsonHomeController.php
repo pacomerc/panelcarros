@@ -48,4 +48,30 @@ class JsonHomeController extends Controller
        return new Response($json);  
         
     }//////end function
+
+    /**
+     * @Route("/json/detalle/{id}", name="json_detalle")
+     */
+    public function detalleAction($id)
+    {
+//        Preparo variables para crear los headers y poder convertir los daton en Json
+        $encoders = [new XmlEncoder(), new JsonEncode()];
+        $normalizers = [new GetSetMethodNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+//        Realizo la busqueda del registro pedido
+        $detalle = $this->getDoctrine()->getRepository('PanelBundle:ExcelFataBase')->findOneBy(['id' => $id]);
+
+//        Compruebo de que exista el registro
+        if(!$detalle)
+        {
+            die('El registro no existe');
+        }
+
+//        Convierto los datos recogidos a un arreglo Json
+        $json = $serializer->serialize($detalle, 'json');
+
+//        Mando el Json
+        return new Request($json);
+    }
 }
